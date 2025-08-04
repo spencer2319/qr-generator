@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Pro - Professional QR Code Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-premium {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .qr-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #qrcode {
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .premium-features {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .premium-features h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .premium-features ul {
+            list-style: none;
+        }
+
+        .premium-features li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .premium-features li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            transform: scale(1.2);
+            border-color: #667eea;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .price-tag {
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: auto;
+            padding-top: 20px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Pro</h1>
+            <p>Professional QR Codes in Seconds</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label for="qrText">Enter your text or URL:</label>
+                <textarea id="qrText" rows="3" placeholder="https://yourwebsite.com or any text..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" onclick="generateBasicQR()">Generate Free QR Code</button>
+        </div>
+
+        <div class="qr-display">
+            <div id="qrcode"></div>
+        </div>
+
+        <div id="downloadSection" class="download-section hidden">
+            <button class="btn btn-primary" onclick="downloadQR()">Download Basic QR Code (Free)</button>
+        </div>
+
+        <div class="premium-features">
+            <h3>🚀 Premium Features</h3>
+            <ul>
+                <li>Custom colors & styles</li>
+                <li>High resolution (4K)</li>
+                <li>Logo embedding</li>
+                <li>Bulk generation</li>
+                <li>Analytics tracking</li>
+            </ul>
+            
+            <div class="input-group" style="margin-top: 20px;">
+                <label>Choose Premium Color:</label>
+                <div class="color-picker">
+                    <div class="color-option" style="background: #ff6b6b" data-color="#ff6b6b"></div>
+                    <div class="color-option" style="background: #4ecdc4" data-color="#4ecdc4"></div>
+                    <div class="color-option" style="background: #45b7d1" data-color="#45b7d1"></div>
+                    <div class="color-option" style="background: #96ceb4" data-color="#96ceb4"></div>
+                    <div class="color-option" style="background: #ffeaa7" data-color="#ffeaa7"></div>
+                    <div class="color-option" style="background: #dda0dd" data-color="#dda0dd"></div>
+                </div>
+            </div>
+
+            <div class="price-tag">$3.99</div>
+            <button class="btn btn-premium" onclick="generatePremiumQR()">Generate Premium QR Code</button>
+        </div>
+
+        <div class="footer">
+            <p>Built for mobile entrepreneurs 📱</p>
+            <p>Start your QR code business today!</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script>
+    <script>
+        let currentQR = null;
+        let selectedColor = '#000000';
+        
+        // Check if QRCode library loaded, if not use fallback
+        function checkQRLibrary() {
+            if (typeof QRCode === 'undefined') {
+                // Fallback: create QR code using Google Charts API
+                return false;
+            }
+            return true;
+        }
+
+        // Color picker functionality
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedColor = this.dataset.color;
+            });
+        });
+
+        function generateBasicQR() {
+            const text = document.getElementById('qrText').value.trim();
+            
+            if (!text) {
+                alert('Please enter some text or URL!');
+                return;
+            }
+
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            if (checkQRLibrary()) {
+                // Use QRCode library
+                QRCode.toCanvas(document.getElementById('qrcode'), text, {
+                    width: 200,
+                    height: 200,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                }, function(error) {
+                    if (error) {
+                        console.error(error);
+                        generateFallbackQR(text, '#000000');
+                    } else {
+                        currentQR = document.querySelector('#qrcode canvas');
+                        document.getElementById('downloadSection').classList.remove('hidden');
+                    }
+                });
+            } else {
+                // Use fallback method
+                generateFallbackQR(text, '#000000');
+            }
+        }
+        
+        function generateFallbackQR(text, color = '#000000') {
+            // Fallback using Google Charts API
+            const size = 200;
+            const encodedText = encodeURIComponent(text);
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodedText}&color=${color.replace('#', '')}`;
+            
+            const img = document.createElement('img');
+            img.src = qrUrl;
+            img.style.width = size + 'px';
+            img.style.height = size + 'px';
+            img.style.border = '1px solid #ddd';
+            img.style.borderRadius = '8px';
+            
+            img.onload = function() {
+                document.getElementById('qrcode').appendChild(img);
+                currentQR = img;
+                document.getElementById('downloadSection').classList.remove('hidden');
+            };
+            
+            img.onerror = function() {
+                document.getElementById('qrcode').innerHTML = '<p style="color: red;">Error generating QR code. Please check your internet connection.</p>';
+            };
+        }
+
+        function generatePremiumQR() {
+            const text = document.getElementById('qrText').value.trim();
+            
+            if (!text) {
+                alert('Please enter some text or URL first!');
+                return;
+            }
+
+            if (!selectedColor || selectedColor === '#000000') {
+                alert('Please select a premium color first!');
+                return;
+            }
+
+            // Simulate payment process
+            if (confirm(`Purchase premium QR code for $3.99?\n\nFeatures included:\n• Custom color: ${selectedColor}\n• High resolution\n• Commercial license`)) {
+                // In real implementation, integrate Stripe here
+                alert('🎉 Payment successful! Generating your premium QR code...');
+                
+                // Clear previous QR code
+                document.getElementById('qrcode').innerHTML = '';
+                
+                if (checkQRLibrary()) {
+                    // Generate premium colored QR code with library
+                    QRCode.toCanvas(document.getElementById('qrcode'), text, {
+                        width: 300,
+                        height: 300,
+                        color: {
+                            dark: selectedColor,
+                            light: '#FFFFFF'
+                        }
+                    }, function(error) {
+                        if (error) {
+                            console.error(error);
+                            generateFallbackQR(text, selectedColor);
+                        } else {
+                            currentQR = document.querySelector('#qrcode canvas');
+                            document.getElementById('downloadSection').innerHTML = 
+                                '<button class="btn btn-premium" onclick="downloadQR()">Download Premium QR Code</button>';
+                            document.getElementById('downloadSection').classList.remove('hidden');
+                        }
+                    });
+                } else {
+                    // Use fallback for premium
+                    generateFallbackQR(text, selectedColor);
+                    document.getElementById('downloadSection').innerHTML = 
+                        '<button class="btn btn-premium" onclick="downloadQR()">Download Premium QR Code</button>';
+                    document.getElementById('downloadSection').classList.remove('hidden');
+                }
+            }
+        }
+
+        function downloadQR() {
+            if (!currentQR) {
+                alert('Please generate a QR code first!');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'qr-code.png';
+            
+            if (currentQR.tagName === 'CANVAS') {
+                // Canvas download
+                link.href = currentQR.toDataURL();
+            } else if (currentQR.tagName === 'IMG') {
+                // Image download - convert to canvas first
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = currentQR.width;
+                canvas.height = currentQR.height;
+                ctx.drawImage(currentQR, 0, 0);
+                link.href = canvas.toDataURL();
+            }
+            
+            link.click();
+        }
+
+        // Auto-focus on text input when page loads
+        document.getElementById('qrText').focus();
+    </script>
+</body>
+</html>
